@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles, Typography, CssBaseline } from '@material-ui/core';
+import { makeStyles, Typography, CssBaseline, withWidth } from '@material-ui/core';
 import moment from 'moment'
 
 const styles = theme => ({
@@ -49,7 +49,7 @@ function getSeconds(m) {
   );
 }
 
-function Index({ children }) {
+function Index({ children, width }) {
   const end = moment('2019-08-30 16:00')
   const classes = makeStyles(styles)();
   const [refresh, setRefresh] = useState(end.diff(moment(), 's'))
@@ -57,11 +57,12 @@ function Index({ children }) {
     const inter = setInterval(() => {setRefresh(end.diff(moment(), 's'))}, 1000)
     return () => clearInterval(inter)
   }, [])
+  const variant = width === 'sm' || width === 'xs' ? 2 : 1
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Typography align="center" variant="h1" gutterBottom>Countdown</Typography>
-      <Typography align='left' variant="h1">
+      <Typography align="center" variant={"h" + variant} gutterBottom>Countdown</Typography>
+      <Typography align='center' variant={"h" + (variant + 1)}>
         {getDays(refresh).toString().padStart(2, '0')}{" "}jour{(getDays(refresh) > 1 ? 's' : '')}
         <br/>
         {getHours(refresh).toString().padStart(2, '0')}{" "}heure{(getHours(refresh) > 1 ? 's' : '')}
@@ -74,4 +75,4 @@ function Index({ children }) {
   );
 }
 
-export default Index;
+export default withWidth()(Index);
